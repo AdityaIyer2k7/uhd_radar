@@ -83,7 +83,7 @@ For this method, you will need:
     1. If you are on Windows, open PowerShell and run `arp -a`. You should see an interface for 192.168.137.1 and within that section should be an IP address that starts with 192.168.137 and ends with something other than .0   or .1 (ex. 192.168.137.27).  
     2. If you are on Linux, then Pi #1 always has the IP 10.42.0.10, and Pi #2 always has the IP 10.42.0.20. If for some reason you cannot find the IP, confirm the subnet is 10.42.0 by running `ip a`. Under the enxc...   section should say “state UP” and you should see “inet 10.42.0.1/24”. You can then scan the subnet to find the pi by running `nmap -sn 10.42.0.1/24` and looking for a device that’s not 10.42.0.1. You may need to restart   the Pi and give it a minute to boot. 
 
-1. Run `ssh ubuntu@<pi-ip-address>` to connect to the Pi. You can now run commands on the Pi, and transfer files to and from your laptop using SCP (see above).
+1. Run `ssh ubuntu@<pi-ip-address>` to connect to the Pi. You can now run commands on the Pi, and transfer files to and from your laptop using SCP (see below).
 
 ## SSH over Wi-Fi: 
 
@@ -110,7 +110,7 @@ The Raspberry Pi 5 unfortunately does not support data transfer (USB OTG) over i
 If you have committed changes to the code and pushed them to GitHub, you can just checkout the correct branch and run `git pull` on the Pi to see them. However, if you are debugging or making small changes to a file that aren’t worthy of a commit, you can send files directly with SCP by running the following command on your laptop. 
 
 Send a single file with `scp <my-file-path> ubuntu@<pi-ip-address>:<pi-directory-path>`. 
-* Windows: `scp sdr\main.cpp ubuntu@192.168.137.10:~/uhd_radar/sdr/`
+* Windows: `scp sdr/main.cpp ubuntu@192.168.137.10:~/uhd_radar/sdr/`
 * Linux: `scp sdr/main.cpp ubuntu@10.42.0.10:~/uhd_radar/sdr/`
 
 You can also send a whole folder with `scp -r <my-directory-path> ubuntu@<pi-ip-address>:<pi-directory-path>`. 
