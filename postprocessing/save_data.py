@@ -20,6 +20,7 @@ def save_data(yaml_filename, extra_files={}, alternative_rx_samps_loc=None, num_
 
     shutil.copy(yaml_filename, file_prefix + "_config.yaml")
     if config['FILES']['max_chirps_per_file'] == -1:
+            
             shutil.move(config['FILES']['save_loc'], file_prefix + "_rx_samps.bin")
     else:
         if config['RUN_MANAGER']['save_partial_files']:

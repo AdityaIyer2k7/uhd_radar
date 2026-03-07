@@ -11,6 +11,7 @@ uhd_stdout.log
 calibration/
 postprocessing/*.png
 *.tmp
+sdr/gps-output.txt
 
 # Python
 
