@@ -27,6 +27,8 @@ long int pulses_received = 0;
 long int error_count = 0;
 long int last_pulse_num_written = -1; // Index number (pulses_received - error_count) of last sample written to outfile
 
+bool using_gps = true;
+
 // Cout mutex
 std::mutex cout_mutex;
 
@@ -166,7 +168,7 @@ void wrapUp(boost::asio::posix::stream_descriptor& gps_stream, ofstream& outfile
   outfile.close();
   cout << "[CLOSE FILE] " << current_filename << endl;
 
-  gps_stream.close();
+  try gps_stream.close();
 
   cout << "[RX] Error count: " << error_count << endl;
   cout << "[RX] Total pulses written: " << last_pulse_num_written << endl;
@@ -413,17 +415,25 @@ int UHD_SAFE_MAIN(int argc, char *argv[]) {
   serial_port serial(io);
 
   printf("Opening serial port...\n");
-  serial.open("/dev/ttyACM0");  // Adjust if needed for your system
-  printf("Serial port opened.\n");
-  serial.set_option(serial_port_base::baud_rate(115200));
-  serial.set_option(serial_port_base::character_size(8));
-  serial.set_option(serial_port_base::parity(serial_port_base::parity::none));
-  serial.set_option(serial_port_base::stop_bits(serial_port_base::stop_bits::one));
-  serial.set_option(serial_port_base::flow_control(serial_port_base::flow_control::none));
+  try {
+    serial.open("/dev/ttyACM0");  // Adjust if needed for your system
+    printf("Serial port opened.\n");
+  } catch (boost::system::system_err err) {
+    printf("Failed to open GPS; running on local time");
+    using_gps = false;
+  }
 
-  // Send UBX commands to configure GPS
-  configureRate(serial, 3);              // 3 Hz update rate
-  configureNMEAMessages(serial, 1);      // Enable only GGA
+  if (using_gps) {
+    serial.set_option(serial_port_base::baud_rate(115200));
+    serial.set_option(serial_port_base::character_size(8));
+    serial.set_option(serial_port_base::parity(serial_port_base::parity::none));
+    serial.set_option(serial_port_base::stop_bits(serial_port_base::stop_bits::one));
+    serial.set_option(serial_port_base::flow_control(serial_port_base::flow_control::none));
+
+    // Send UBX commands to configure GPS
+    configureRate(serial, 3);              // 3 Hz update rate
+    configureNMEAMessages(serial, 1);      // Enable only GGA
+  }
 
   ofstream gps_output("gps_log.txt");
 
@@ -444,7 +454,7 @@ int UHD_SAFE_MAIN(int argc, char *argv[]) {
 
 
     // Our GPS method (below commented GPS from old version)
-    if (((pulses_received % 2000) == 0) && (sdr.getClkRef() == "gpsdo")) {
+    if (using_gps && ((pulses_received % 2000) == 0) && (sdr.getClkRef() == "gpsdo")) {
       read(serial, buffer(&c, 1));
       if (c == '\n') {
           if (line.find("$GNGGA") == 0) {
