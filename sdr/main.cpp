@@ -168,7 +168,7 @@ void wrapUp(boost::asio::posix::stream_descriptor& gps_stream, ofstream& outfile
   outfile.close();
   cout << "[CLOSE FILE] " << current_filename << endl;
 
-  try gps_stream.close();
+  if (using_gps) { gps_stream.close(); }
 
   cout << "[RX] Error count: " << error_count << endl;
   cout << "[RX] Total pulses written: " << last_pulse_num_written << endl;
@@ -418,7 +418,7 @@ int UHD_SAFE_MAIN(int argc, char *argv[]) {
   try {
     serial.open("/dev/ttyACM0");  // Adjust if needed for your system
     printf("Serial port opened.\n");
-  } catch (boost::system::system_err err) {
+  } catch (boost::system::system_error err) {
     printf("Failed to open GPS; running on local time");
     using_gps = false;
   }

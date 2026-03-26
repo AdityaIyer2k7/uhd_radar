@@ -133,7 +133,7 @@ RUN_MANAGER: # These settings are only used by run.py -- not read by main.cpp
     final_save_loc: null                 # Save location for the big final file,
                                          #   set to null if you don't want to
                                          #   save a big file
-    save_partial_files: False            # Set to true if you want individual
+    save_partial_files: True             # Set to true if you want individual
                                          #   small files to be copied, set to
                                          #   false if you just want the big
                                          #   merged file to be copied
