@@ -10,7 +10,7 @@ GENERATE:
                                          #   Supported options: "linear",
                                          #   "hyperbolic"
     chirp_bandwidth: 25e6                # [Hz] Bandwidth of the chirp
-    lo_offset_sw: 0e6                    # [Hz] Center frequency of the chirp
+    lo_offset_sw: 13e6                   # [Hz] Center frequency of the chirp
                                          #   (relative to RF center frequency)
     window: 'rectangular'                # Window function applied to the chirp
                                          #   Supported options: "rectangular",
@@ -102,14 +102,14 @@ CHIRP:
     time_offset: 1                       # [s] Offset time before the first
                                          #   received sample
     tx_duration: *pulse_len              # [s] Transmission duration
-    rx_duration: 90e-6                   # [s] Receive duration
+    rx_duration: 60e-6                   # [s] Receive duration
     tr_on_lead: 0e-6                     # [s] Time from GPIO output toggle on
                                          #   to TX (if using GPIO)
     tr_off_trail: 0e-6                   # [s] Time from TX off to GPIO output
                                          #   off (if using GPIO)
-    pulse_rep_int: 100e-6                # [s] Pulse period
+    pulse_rep_int: 200e-6                # [s] Pulse period
     tx_lead: 0e-6                        # [s] Time between start of TX and RX
-    num_pulses: &num_pulses 5000         # No. of chirps to TX/RX - set to -1 to
+    num_pulses: &num_pulses 2000         # No. of chirps to TX/RX - set to -1 to
                                          #   continuously transmit pulses until
                                          #   stopped
     num_presums: 1                       # Number of received pulses to average
