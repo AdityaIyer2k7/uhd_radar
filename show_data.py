@@ -11,8 +11,9 @@ def show_data(file_prefix):
 	t, sr, x = load_radar_data(file_prefix)
 	x_ref = extractSig("data/chirp.bin")
 	x_ref = x_ref[int(x_ref.shape[0]*0.2) : int(x_ref.shape[0]*0.8)]
+	x_ref = x_ref[::-1].conj()
 	print("Data and Chirp loaded!")
-	x_cmp = np.apply_along_axis(lambda m: np.convolve(m, x_ref[::-1]), axis=0, arr=x)
+	x_cmp = np.apply_along_axis(lambda m: np.convolve(m, x_ref), axis=0, arr=x)
 	xavg_cmp = np.sum(np.abs(x_cmp), axis=1)
 	print("Compression complete!")
 
