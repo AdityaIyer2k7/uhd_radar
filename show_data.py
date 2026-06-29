@@ -12,12 +12,17 @@ def pulse_compress(file_prefix, plot=True, do_window=True):
 	x_ref = extractSig("data/chirp.bin")
 	x_ref = x_ref[:]
 	x_ref = x_ref[::-1].conj()
+	window = np.ones_like(x_ref)
+	# # This is for trapezoidal windows, 20% on each side
+	# if do_window:
+	#	cutoff = int(0.2 * window.shape[0])
+	#	window[ : cutoff] = np.linspace(0, 1, cutoff)
+	#	window[window.shape[0]-cutoff : ] = np.linspace(1, 0, cutoff)
+	# # This os for hanning window
 	if do_window:
-		window = np.ones_like(x_ref)
-		cutoff = int(0.2 * window.shape[0])
-		window[ : cutoff] = np.linspace(0, 1, cutoff)
-		window[window.shape[0]-cutoff : ] = np.linspace(1, 0, cutoff)
-		x_ref *= window
+		window = 0.5 - 0.5 * np.cos(
+		2 * np.pi * np.linspace(0, 1, window.shape[0]))
+	x_ref *= window
 	print("Data and Chirp loaded!")
 	x_cmp = np.apply_along_axis(
 		lambda m: np.convolve(m, x_ref, mode="same"),
